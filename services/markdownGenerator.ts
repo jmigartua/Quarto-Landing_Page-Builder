@@ -1,7 +1,7 @@
 import { 
     PageComponent, ElementType, NavbarProps, HeroProps, FeaturesProps, 
     CtaProps, BannerProps, FooterProps, NavbarItem, AboutProps,
-    SeparatorProps, CarouselProps
+    SeparatorProps, CarouselProps, CapabilitiesProps, CapabilityIllustration
 } from '../types';
 
 export const generateNavbarYaml = (props: NavbarProps): string => {
@@ -19,56 +19,51 @@ export const generateNavbarYaml = (props: NavbarProps): string => {
     }).join('\n');
   };
 
-  let yaml = `navbar:
-  logo: ./assets/pisia.png
-  right:
-${formatItems(props.rightItems, 2)}
-  left:
-${formatItems(props.leftItems, 2)}`;
+  let yaml = `  navbar:
+    logo: ./assets/pisia.png
+    right:
+${formatItems(props.rightItems, 3)}
+    left:
+${formatItems(props.leftItems, 3)}`;
 
   if (props.languageSwitcher) {
       yaml += `
-  tools:
-    - icon: globe
-      menu:
-        - text: "en"
-          href: /index.qmd
-        - text: "es"
-          href: /pages/es/index.qmd
-        - text: "eu"
-          href: /pages/eu/index.qmd`;
+    tools:
+      - icon: globe
+        menu:
+          - text: "en"
+            href: /index.qmd
+          - text: "es"
+            href: /pages/es/index.qmd
+          - text: "eu"
+            href: /pages/eu/index.qmd`;
   }
 
   return yaml;
 };
 
 const generateHeroMarkdown = (props: HeroProps): string => {
-  const buttons = `
-::: {.hero-buttons .mt-4}
+  const buttons = `::: {.hero-buttons .mt-4}
 [${props.primaryButtonText}](${props.primaryButtonLink}){.btn .btn-primary .btn-lg}
 [${props.secondaryButtonText}](${props.secondaryButtonLink}){.btn .btn-outline-secondary .btn-lg}
-:::
-`;
+:::`;
 
   if (props.imageUrl) {
-    return `
-::: {.grid .items-center}
-  ::: {.g-col-12 .g-col-md-6}
-  # ${props.title}
-  
-  ${props.subtitle}
+    return `::: {.grid .items-center}
+::: {.g-col-12 .g-col-md-6}
+# ${props.title}
 
-  ${buttons}
-  :::
-  ::: {.g-col-12 .g-col-md-6}
-  ![${props.imageAlt || 'Hero Image'}](${props.imageUrl})
-  :::
+${props.subtitle}
+
+${buttons}
 :::
-`;
+::: {.g-col-12 .g-col-md-6}
+![${props.imageAlt || 'Hero Image'}](${props.imageUrl})
+:::
+:::`;
   }
 
-  return `
-::: {.text-center .py-5}
+  return `::: {.text-center .py-5}
 # ${props.title}
 
 ::: {.col-lg-6 .mx-auto}
@@ -76,8 +71,7 @@ ${props.subtitle}
 :::
 
 ${buttons}
-:::
-`;
+:::`;
 };
 
 const generateFeaturesMarkdown = (props: FeaturesProps): string => {
@@ -124,56 +118,48 @@ ${imageMarkdown}
         cardContent = `${titleMarkdown}\n${feature.description}`;
     }
 
-    return `
-::: {.g-col-12 .g-col-md-${colWidth}}
-  ::: {.card .h-100 .${hoverClass}}
-    ::: {.card-body}
-    ${cardContent}
-    :::
-  :::
-:::`;
-  }).join('\n');
-
-  return `
-::: {.grid .gap-4}
-${featuresMarkdown}
+    return `::: {.g-col-12 .g-col-md-${colWidth}}
+::: {.card .h-100 .${hoverClass}}
+::: {.card-body}
+${cardContent}
 :::
-`;
+:::
+:::`;
+  }).join('\n\n');
+
+  return `::: {.grid .gap-4}
+${featuresMarkdown}
+:::`;
 };
 
 const generateCtaMarkdown = (props: CtaProps): string => {
-  return `
-::: {.p-5 .my-5 .bg-light .rounded-3}
-  ## ${props.title}
-  
-  <p class="col-md-8 fs-4">${props.subtitle}</p>
-  
-  [${props.buttonText}](${props.buttonLink}){.btn .btn-primary .btn-lg}
-:::
-`;
+  return `::: {.p-5 .my-5 .bg-light .rounded-3}
+## ${props.title}
+
+<p class="col-md-8 fs-4">${props.subtitle}</p>
+
+[${props.buttonText}](${props.buttonLink}){.btn .btn-primary .btn-lg}
+:::`;
 };
 
 export const generateFooterYaml = (props: FooterProps): string => {
   const indent = (level: number) => '  '.repeat(level);
   const linksMarkdown = props.links.map(link => `[${link.text}](${link.href})`).join(' | ');
 
-  return `page-footer:
-  background: light
-  left: |
-${indent(2)}${props.copyrightText}
-  center: |
-${indent(2)}
-  right: |
-${indent(2)}${linksMarkdown}
-`;
+  return `  page-footer:
+    background: light
+    left: |
+${indent(3)}${props.copyrightText}
+    center: |
+${indent(3)}
+    right: |
+${indent(3)}${linksMarkdown}`;
 };
 
 const generateBannerMarkdown = (props: BannerProps): string => {
-    return `
-::: {.callout-note appearance="simple"}
+    return `::: {.callout-note appearance="simple"}
 ${props.text}
-:::
-`;
+:::`;
 };
 
 const generateAboutMarkdown = (props: AboutProps): string => {
@@ -181,23 +167,21 @@ const generateAboutMarkdown = (props: AboutProps): string => {
         `[${btn.text}](${btn.link}){.btn .btn-${btn.type === 'primary' ? 'primary' : 'outline-secondary'} .btn-lg}`
     ).join(' ');
 
-    return `
-::: {.grid .align-items-center .my-5}
-  ::: {.g-col-12 .g-col-md-5}
-  ![${props.imageAlt}](${props.imageUrl})
-  :::
-  ::: {.g-col-12 .g-col-md-7}
-  ## ${props.title}
-  #### ${props.subtitle}
-  
-  ${props.text}
-
-  ::: {.mt-4}
-  ${buttonsMarkdown}
-  :::
-  :::
+    return `::: {.grid .align-items-center .my-5}
+::: {.g-col-12 .g-col-md-5}
+![${props.imageAlt}](${props.imageUrl})
 :::
-`;
+::: {.g-col-12 .g-col-md-7}
+## ${props.title}
+#### ${props.subtitle}
+
+${props.text}
+
+::: {.mt-4}
+${buttonsMarkdown}
+:::
+:::
+:::`;
 };
 
 const generateSeparatorMarkdown = (props: SeparatorProps): string => {
@@ -208,12 +192,164 @@ const generateCarouselMarkdown = (props: CarouselProps): string => {
     const itemsMarkdown = props.images.map(img => 
         `![](${img.src}){.carousel-item caption="${img.caption || img.alt}"}`
     ).join('\n');
-    return `
-:::{.carousel}
+    return `:::{.carousel}
 ${itemsMarkdown}
-:::
-`;
+:::`;
 };
+
+const generateCapabilityCardIllustration = (illustration: CapabilityIllustration): string => {
+    switch (illustration) {
+        case 'logs':
+            return `::: {.card-illustration .card-illustration-logs}
+::: {.log-line}
+[18:34:02]{.log-time} [Successfully installed Babel-2.11]{.log-event}
+:::
+::: {.log-line}
+[18:34:03]{.log-time} [Starting application...]{.log-event}
+:::
+::: {.log-line}
+[18:34:03]{.log-time} [[INFO] Booting worker with pid: 2048]{.log-event}
+:::
+::: {.log-line}
+[18:34:05]{.log-time} [Success: Deployment is available]{.log-success}
+:::
+:::`;
+        case 'menu':
+            return `::: {.card-illustration .card-illustration-menu}
+::: {.menu-trigger}
+[Production]{.trigger-label} [●]{.trigger-dot}
+:::
+::: {.menu-surface}
+[Instant rollback]{.menu-item}  
+[Redeploy]{.menu-item}
+:::
+:::`;
+        case 'form':
+            return `::: {.card-illustration .card-illustration-form}
+::: {.form-field}
+[Build command]{.field-label}  
+[uv sync]{.pill}
+:::
+::: {.form-field}
+[Start command]{.field-label}  
+[uv run gunicorn -w 3 -b 0.0.0.0]{.pill}
+:::
+:::`;
+        case 'secrets':
+            return `::: {.card-illustration .card-illustration-secrets}
+::: {.secret-row}
+[POSTGRES_DB]{.secret-key} [••••••••]{.secret-value}
+:::
+::: {.secret-row}
+[POSTGRES_USER]{.secret-key} [••••••••]{.secret-value}
+:::
+::: {.secret-row}
+[POSTGRES_PASSWORD]{.secret-key} [••••••••]{.secret-value}
+:::
+::: {.secret-row .secret-row-add}
+[+]{.plus} [Add variable]{.secret-key}
+:::
+:::`;
+        case 'links':
+            return `::: {.card-illustration .card-illustration-links}
+::: {.link-row}
+[Deployment URL]{.link-label}  
+[flask-acme-id-310281b.devpush.app ↗]{.link-value}
+:::
+::: {.link-row}
+[Branch URL]{.link-label}  
+[flask-acme-branch-main.devpush.app ↗]{.link-value}
+:::
+::: {.link-row}
+[Environment URL]{.link-label}  
+[flask-acme.devpush.app ↗]{.link-value}
+:::
+:::`;
+        case 'select':
+            return `::: {.card-illustration .card-illustration-select}
+::: {.select-pill}
+[Python]{.select-label} [▾]{.select-caret}
+:::
+::: {.select-menu}
+[Python]{.select-item .select-item-active}  
+[FastAPI]{.select-item}  
+[Django]{.select-item}  
+[Flask]{.select-item}
+:::
+:::`;
+        case 'domains':
+            return `::: {.card-illustration .card-illustration-domains}
+::: {.domain-row}
+[acme.dev]{.domain-name} [Live]{.domain-status .domain-status-live}
+:::
+::: {.domain-row}
+[staging.acme.dev]{.domain-name} [Pending]{.domain-status}
+:::
+::: {.domain-row}
+[api.acme.dev]{.domain-name} [Provisioning]{.domain-status}
+:::
+:::`;
+        case 'avatars':
+            return `::: {.card-illustration .card-illustration-avatars}
+::: {.avatar-stack}
+[HN]{.avatar-circle}
+[AL]{.avatar-circle}
+[MB]{.avatar-circle}
+[+4]{.avatar-circle .avatar-circle-muted}
+:::
+::: {.team-roles}
+Owners · Admins · Viewers
+:::
+:::`;
+        case 'oss':
+            return `::: {.card-illustration .card-illustration-oss}
+[MIT Licensed]{.oss-badge}  
+[GitHub · devpush]{.oss-badge}
+:::`;
+        default:
+            return '';
+    }
+}
+
+const generateCapabilitiesMarkdown = (props: CapabilitiesProps): string => {
+    const capabilitiesCards = props.capabilities.map(cap => `::: {.capability-card}
+::: {.card-content}
+### ${cap.title}
+
+${cap.description}
+:::
+${generateCapabilityCardIllustration(cap.illustration)}
+:::`);
+
+    const pills = props.pills.map(pill => `::: {.pill-card}
+**${pill.title}**  
+${pill.description}
+:::`);
+    // duplicate pills for marquee effect
+    const marqueePills = [...pills, ...pills].join('\n\n');
+
+    const capabilitiesGrid = `::: {.section}
+::: {.container-xl}
+## ${props.title} {.section-title .gradient-text}
+::: {.capabilities-grid}
+${capabilitiesCards.join('\n\n')}
+:::
+:::
+:::`;
+
+    const marqueeSection = `::: {.section}
+::: {.container-xl}
+## ${props.moreTitle} {.section-title .gradient-text}
+::: {.marquee}
+::: {.marquee-track}
+${marqueePills}
+:::
+:::
+:::
+:::`;
+
+    return `${capabilitiesGrid}\n\n${marqueeSection}`;
+}
 
 
 export const generateIndexQmdContent = (components: PageComponent[]): string => {
@@ -245,6 +381,8 @@ toc: false
         return generateSeparatorMarkdown(comp.props);
       case ElementType.CAROUSEL:
         return generateCarouselMarkdown(comp.props);
+      case ElementType.CAPABILITIES:
+        return generateCapabilitiesMarkdown(comp.props);
       default:
         return '';
     }

@@ -110,6 +110,29 @@ export const createNewComponent = (type: ElementType): PageComponent => {
                     ]
                 }
             };
+        case ElementType.CAPABILITIES:
+            return {
+                id,
+                type: ElementType.CAPABILITIES,
+                props: {
+                    title: 'Capabilities',
+                    capabilities: [
+                        { id: `cap-${Date.now()}-1`, title: 'Real-time logs', description: 'Build and runtime logs streamed in real-time for each deployment, fully searchable.', illustration: 'logs' },
+                        { id: `cap-${Date.now()}-2`, title: 'Instant rollback', description: 'Made a mistake? Roll back to the previous environment alias without rebuilding.', illustration: 'menu' },
+                        { id: `cap-${Date.now()}-3`, title: 'Configurable build', description: 'Customize the deployment process end-to-end with build and start commands.', illustration: 'form' },
+                        { id: `cap-${Date.now()}-4`, title: 'Encrypted environment variables', description: 'Add environment variables to your project and let your team access them safely.', illustration: 'secrets' },
+                        { id: `cap-${Date.now()}-5`, title: 'Preview URLs', description: 'Get a URL for each deployment, and aliases for the latest deploy per branch.', illustration: 'links' },
+                        { id: `cap-${Date.now()}-6`, title: 'Framework agnostic', description: 'We support Python (FastAPI, Flask, Django…), Node.js, and soon PHP.', illustration: 'select' },
+                    ],
+                    moreTitle: 'And there\'s more in the works…',
+                    pills: [
+                        { id: `pill-${Date.now()}-1`, title: 'SQLite database', description: 'Manage SQLite databases per environment.' },
+                        { id: `pill-${Date.now()}-2`, title: 'Persistent storage', description: 'Create files per environment for each project.' },
+                        { id: `pill-${Date.now()}-3`, title: 'Custom containers', description: 'Deploy apps on custom Docker containers.' },
+                        { id: `pill-${Date.now()}-4`, title: 'Remote nodes', description: 'Manage multiple nodes from a single dashboard.' },
+                    ]
+                },
+            };
         default:
             throw new Error(`Unknown component type: ${type}`);
     }

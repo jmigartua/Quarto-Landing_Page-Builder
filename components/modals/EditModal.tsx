@@ -9,6 +9,7 @@ import { EditFooterModal } from './EditFooterModal';
 import { EditAboutModal } from './EditAboutModal';
 import { EditSeparatorModal } from './EditSeparatorModal';
 import { EditCarouselModal } from './EditCarouselModal';
+import { EditCapabilitiesModal } from './EditCapabilitiesModal';
 
 interface EditModalProps {
     component: PageComponent;
@@ -36,6 +37,8 @@ export const EditModal: React.FC<EditModalProps> = ({ component, onSave, onClose
             return <EditSeparatorModal component={component} onSave={onSave} onClose={onClose} />;
         case ElementType.CAROUSEL:
             return <EditCarouselModal component={component} onSave={onSave} onClose={onClose} />;
+        case ElementType.CAPABILITIES:
+            return <EditCapabilitiesModal component={component} onSave={onSave} onClose={onClose} />;
         default:
             return null;
     }

@@ -88,6 +88,8 @@ const renderComponent = (
         return <CanvasComponents.Separator {...component.props} />;
       case ElementType.CAROUSEL:
         return <CanvasComponents.Carousel {...component.props} />;
+      case ElementType.CAPABILITIES:
+        return <CanvasComponents.Capabilities {...component.props} />;
       default:
         return null;
     }
