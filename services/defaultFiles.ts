@@ -68,6 +68,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.feature-card-hoverable {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.feature-card-hoverable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 // Navbar customization
 .navbar {
   background-color: #ffffff !important;

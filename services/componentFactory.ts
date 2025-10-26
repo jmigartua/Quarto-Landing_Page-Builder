@@ -90,17 +90,13 @@ export const createNewComponent = (type: ElementType): PageComponent => {
                         { id: `about-btn-${Date.now()}-1`, text: 'Sign up online', link: '#', type: 'primary' },
                         { id: `about-btn-${Date.now()}-2`, text: 'Get the source code', link: '#', type: 'secondary' },
                     ],
-                    showVerticalSeparator: false,
                 }
             };
         case ElementType.SEPARATOR:
             return {
                 id,
                 type: ElementType.SEPARATOR,
-                props: {
-                    height: 2,
-                    color: '#e5e7eb',
-                }
+                props: {}
             };
         case ElementType.CAROUSEL:
             return {

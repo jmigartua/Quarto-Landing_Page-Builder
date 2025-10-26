@@ -24,6 +24,7 @@ const renderComponent = (
   };
   
   const isDraggable = component.type !== ElementType.NAVBAR && component.type !== ElementType.FOOTER;
+  const canBeEdited = component.type !== ElementType.SEPARATOR;
 
   const commonProps = {
     key: component.id,
@@ -35,7 +36,7 @@ const renderComponent = (
     className: `relative bg-white p-4 rounded-lg shadow-lifted border border-border-light mb-4 transition-shadow hover:shadow-lg ${isDraggable ? 'cursor-move' : ''}`,
   };
   
-  const editButton = (
+  const editButton = canBeEdited && (
     <button 
       onClick={() => onEdit(component)} 
       className="absolute top-2 right-10 p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"

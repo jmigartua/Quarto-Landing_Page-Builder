@@ -95,14 +95,10 @@ export interface AboutProps {
     imageUrl: string;
     imageAlt: string;
     buttons: AboutButton[];
-    showVerticalSeparator: boolean;
 }
 
 // Separator Props
-export interface SeparatorProps {
-    height: number;
-    color: string;
-}
+export interface SeparatorProps {}
 
 // Carousel Props
 export interface CarouselImage {

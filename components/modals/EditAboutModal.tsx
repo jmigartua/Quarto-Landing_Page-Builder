@@ -22,14 +22,6 @@ const TextAreaField = ({ label, value, onChange, name }: { label: string, value:
     </div>
 );
 
-const CheckboxField = ({ label, checked, onChange, name }: { label: string, checked: boolean, name: string, onChange: (e: ChangeEvent<HTMLInputElement>) => void }) => (
-    <div className="flex items-center">
-        <input type="checkbox" checked={checked} onChange={onChange} name={name} className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" />
-        <label className="ml-2 block text-sm text-gray-900">{label}</label>
-    </div>
-);
-
-
 export const EditAboutModal: React.FC<EditAboutModalProps> = ({ component, onSave, onClose }) => {
     const [props, setProps] = useState<AboutProps>(component.props);
 
@@ -37,11 +29,6 @@ export const EditAboutModal: React.FC<EditAboutModalProps> = ({ component, onSav
         const { name, value } = e.target;
         setProps(prev => ({ ...prev, [name]: value }));
     };
-
-    const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target;
-        setProps(prev => ({...prev, [name]: checked }));
-    }
 
     const handleButtonChange = (id: string, field: keyof AboutButton, value: string) => {
         const newButtons = props.buttons.map(b => b.id === id ? { ...b, [field]: value } : b);
@@ -78,7 +65,6 @@ export const EditAboutModal: React.FC<EditAboutModalProps> = ({ component, onSav
                     <InputField label="Image URL" name="imageUrl" value={props.imageUrl} onChange={handleChange} />
                     <InputField label="Image Alt Text" name="imageAlt" value={props.imageAlt} onChange={handleChange} />
                 </div>
-                <CheckboxField label="Show Vertical Separator" name="showVerticalSeparator" checked={props.showVerticalSeparator} onChange={handleCheckboxChange} />
 
                 <div>
                     <h4 className="font-semibold text-gray-800 mb-2">Buttons</h4>

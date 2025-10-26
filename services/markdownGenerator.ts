@@ -43,16 +43,22 @@ ${formatItems(props.leftItems, 2)}`;
 };
 
 const generateHeroMarkdown = (props: HeroProps): string => {
+  const buttons = `
+::: {.hero-buttons .mt-4}
+[${props.primaryButtonText}](${props.primaryButtonLink}){.btn .btn-primary .btn-lg}
+[${props.secondaryButtonText}](${props.secondaryButtonLink}){.btn .btn-outline-secondary .btn-lg}
+:::
+`;
+
   if (props.imageUrl) {
     return `
-::: {.grid}
+::: {.grid .items-center}
   ::: {.g-col-12 .g-col-md-6}
   # ${props.title}
   
   ${props.subtitle}
 
-  <a href="${props.primaryButtonLink}" class="btn btn-primary btn-lg mt-3">${props.primaryButtonText}</a>
-  <a href="${props.secondaryButtonLink}" class="btn btn-outline-secondary btn-lg mt-3">${props.secondaryButtonText}</a>
+  ${buttons}
   :::
   ::: {.g-col-12 .g-col-md-6}
   ![${props.imageAlt || 'Hero Image'}](${props.imageUrl})
@@ -62,46 +68,48 @@ const generateHeroMarkdown = (props: HeroProps): string => {
   }
 
   return `
-<div class="px-4 py-5 my-5 text-center">
-  <h1 class="display-5 fw-bold">${props.title}</h1>
-  <div class="col-lg-6 mx-auto">
-    <p class="lead mb-4">${props.subtitle}</p>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-      <a href="${props.primaryButtonLink}" class="btn btn-primary btn-lg px-4 gap-3">${props.primaryButtonText}</a>
-      <a href="${props.secondaryButtonLink}" class="btn btn-outline-secondary btn-lg px-4">${props.secondaryButtonText}</a>
-    </div>
-  </div>
-</div>`;
+::: {.text-center .py-5}
+# ${props.title}
+
+::: {.col-lg-6 .mx-auto}
+${props.subtitle}
+:::
+
+${buttons}
+:::
+`;
 };
 
 const generateFeaturesMarkdown = (props: FeaturesProps): string => {
     const colWidth = Math.floor(12 / props.gridColumns);
-    const featuresHtml = props.features.map(feature => {
+    const featuresMarkdown = props.features.map(feature => {
     const hoverClass = props.hoverEffect ? 'feature-card-hoverable' : '';
-    const content = `
-### ${feature.title}
-${feature.description}
-`;
     
+    const titleMarkdown = feature.href 
+        ? `### [${feature.title}](${feature.href}){style="text-decoration: none; color: inherit;"}` 
+        : `### ${feature.title}`;
+
     let cardContent;
 
     if (feature.imageUrl) {
         const imageMarkdown = `![${feature.title}](${feature.imageUrl}){fig-alt="${feature.title}"}`;
         switch(feature.imagePosition) {
             case 'left':
-                cardContent = `::: {.grid}
+                cardContent = `::: {.grid .align-items-center}
 :::: {.g-col-4}
 ${imageMarkdown}
 ::::
 :::: {.g-col-8}
-${content}
+${titleMarkdown}
+${feature.description}
 ::::
 :::`;
                 break;
             case 'right':
-                cardContent = `::: {.grid}
+                cardContent = `::: {.grid .align-items-center}
 :::: {.g-col-8}
-${content}
+${titleMarkdown}
+${feature.description}
 ::::
 :::: {.g-col-4}
 ${imageMarkdown}
@@ -110,41 +118,38 @@ ${imageMarkdown}
                 break;
             case 'top':
             default:
-                cardContent = `${imageMarkdown}\n\n${content}`;
+                cardContent = `${imageMarkdown}\n\n${titleMarkdown}\n${feature.description}`;
         }
     } else {
-        cardContent = content;
+        cardContent = `${titleMarkdown}\n${feature.description}`;
     }
-
-    const cardBody = feature.href ? `<a href="${feature.href}" class="text-decoration-none text-dark">${cardContent}</a>` : cardContent;
 
     return `
 ::: {.g-col-12 .g-col-md-${colWidth}}
-<div class="card h-100 ${hoverClass}">
-  <div class="card-body">
-    ${cardBody}
-  </div>
-</div>
-:::
-`;
-  }).join('');
+  ::: {.card .h-100 .${hoverClass}}
+    ::: {.card-body}
+    ${cardContent}
+    :::
+  :::
+:::`;
+  }).join('\n');
 
   return `
 ::: {.grid .gap-4}
-${featuresHtml}
+${featuresMarkdown}
 :::
 `;
 };
 
 const generateCtaMarkdown = (props: CtaProps): string => {
   return `
-<div class="bg-light p-5 rounded-3 my-5">
-  <div class="container-fluid py-5">
-    <h1 class="display-5 fw-bold">${props.title}</h1>
-    <p class="col-md-8 fs-4">${props.subtitle}</p>
-    <a href="${props.buttonLink}" class="btn btn-primary btn-lg" type="button">${props.buttonText}</a>
-  </div>
-</div>
+::: {.p-5 .my-5 .bg-light .rounded-3}
+  ## ${props.title}
+  
+  <p class="col-md-8 fs-4">${props.subtitle}</p>
+  
+  [${props.buttonText}](${props.buttonLink}){.btn .btn-primary .btn-lg}
+:::
 `;
 };
 
@@ -165,41 +170,38 @@ ${indent(2)}${linksMarkdown}
 
 const generateBannerMarkdown = (props: BannerProps): string => {
     return `
-<div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 my-4">
-  ${props.text}
-</div>
+::: {.callout-note appearance="simple"}
+${props.text}
+:::
 `;
 };
 
 const generateAboutMarkdown = (props: AboutProps): string => {
-    const buttonsHtml = props.buttons.map(btn => 
-        `<a href="${btn.link}" class="btn btn-${btn.type === 'primary' ? 'primary' : 'outline-secondary'} btn-lg mt-2">${btn.text}</a>`
+    const buttonsMarkdown = props.buttons.map(btn => 
+        `[${btn.text}](${btn.link}){.btn .btn-${btn.type === 'primary' ? 'primary' : 'outline-secondary'} .btn-lg}`
     ).join(' ');
 
-    const separator = props.showVerticalSeparator ? '<div style="border-left: 1px solid #ddd; height: 100%;"></div>' : '';
-
     return `
-::: {.grid .align-items-center}
+::: {.grid .align-items-center .my-5}
   ::: {.g-col-12 .g-col-md-5}
   ![${props.imageAlt}](${props.imageUrl})
   :::
-  ${props.showVerticalSeparator ? `::: {.g-col-1} ${separator} :::` : ''}
-  ::: {.g-col-12 .g-col-md-${props.showVerticalSeparator ? 6 : 7}}
+  ::: {.g-col-12 .g-col-md-7}
   ## ${props.title}
   #### ${props.subtitle}
   
   ${props.text}
 
-  <div class="mt-4">
-  ${buttonsHtml}
-  </div>
+  ::: {.mt-4}
+  ${buttonsMarkdown}
+  :::
   :::
 :::
 `;
 };
 
 const generateSeparatorMarkdown = (props: SeparatorProps): string => {
-    return `<hr style="height: ${props.height}px; background-color: ${props.color}; border: none; margin: 2rem 0;">`;
+    return `---`;
 };
 
 const generateCarouselMarkdown = (props: CarouselProps): string => {
@@ -215,29 +217,19 @@ ${itemsMarkdown}
 
 
 export const generateIndexQmdContent = (components: PageComponent[]): string => {
-  if (components.length === 0) {
-    return `<!-- Drag elements from the left panel to the canvas to start building your page. -->
+  const frontMatter = `---
+page-layout: full
+toc: false
+---
 `;
-  }
 
-  // Inject CSS for feature hover effect if needed
-  const hasFeaturesWithHover = components.some(c => c.type === ElementType.FEATURES && c.props.hoverEffect);
-  const hoverCss = hasFeaturesWithHover ? `
-<style>
-.feature-card-hoverable {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-.feature-card-hoverable:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-a.text-decoration-none {
-    color: inherit; /* Ensure link color doesn't override card text */
-}
-</style>
-` : '';
+  if (components.length === 0) {
+    return frontMatter;
+  }
   
-  const bodyContent = components.map(comp => {
+  const bodyComponents = components.filter(c => c.type !== 'navbar' && c.type !== 'footer');
+
+  const bodyContent = bodyComponents.map(comp => {
     switch (comp.type) {
       case ElementType.HERO:
         return generateHeroMarkdown(comp.props);
@@ -253,14 +245,10 @@ a.text-decoration-none {
         return generateSeparatorMarkdown(comp.props);
       case ElementType.CAROUSEL:
         return generateCarouselMarkdown(comp.props);
-      // Navbar and Footer are handled in _quarto.yml
-      case ElementType.NAVBAR:
-      case ElementType.FOOTER:
-        return '';
       default:
         return '';
     }
   }).join('\n\n');
   
-  return `${hoverCss}\n${bodyContent}`;
+  return `${frontMatter}\n\n${bodyContent}`;
 };
