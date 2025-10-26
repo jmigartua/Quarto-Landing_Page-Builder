@@ -1,7 +1,8 @@
 import { 
     PageComponent, ElementType, NavbarProps, HeroProps, FeaturesProps, 
     CtaProps, BannerProps, FooterProps, NavbarItem, AboutProps,
-    SeparatorProps, CarouselProps, CapabilitiesProps, CapabilityIllustration
+    SeparatorProps, CarouselProps, CapabilitiesProps, CapabilityIllustration,
+    FaqProps
 } from '../types';
 
 export const generateNavbarYaml = (props: NavbarProps): string => {
@@ -185,15 +186,50 @@ ${buttonsMarkdown}
 };
 
 const generateSeparatorMarkdown = (props: SeparatorProps): string => {
-    return `---`;
+    const height = props.height || 1;
+    const color = props.color || '#e5e7eb';
+    // Using a div for a styled separator is more flexible than ---
+    return `:::{style="height: ${height}px; background-color: ${color}; margin: 2rem 0;"}
+:::`;
 };
 
 const generateCarouselMarkdown = (props: CarouselProps): string => {
-    const itemsMarkdown = props.images.map(img => 
-        `![](${img.src}){.carousel-item caption="${img.caption || img.alt}"}`
-    ).join('\n');
-    return `:::{.carousel}
+    const galleryId = 'features-gallery';
+
+    const itemsMarkdown = props.images.map((img, index) => {
+        const activeClass = index === 0 ? ' .active' : '';
+        const altText = `${img.title} — ${img.description}`;
+        const imageMarkdown = `![${altText}](${img.src}){.d-block .w-100 .rounded .shadow style="max-height: 400px; object-fit: cover;"}`;
+        const captionMarkdown = `::: {.carousel-caption .d-none .d-md-block}
+**${img.title}**  
+${img.description}
+:::`;
+
+        return `::: {.carousel-item${activeClass}}
+${imageMarkdown}
+
+${captionMarkdown}
+:::`;
+    }).join('\n\n');
+
+    const indicatorsMarkdown = props.images.map((_, index) => {
+        const activeClass = index === 0 ? ' class="active"' : '';
+        return `  <button type="button" data-bs-target="#${galleryId}" data-bs-slide-to="${index}"${activeClass} aria-label="Slide ${index + 1}"></button>`;
+    }).join('\n');
+
+    return `::: {.section}
+::: {.container-md .mt-4}
+::: {#${galleryId} .carousel .slide data-bs-ride="carousel" data-bs-interval="5000" style="max-width: 800px; margin: 0 auto;"}
+::: {.carousel-inner}
 ${itemsMarkdown}
+:::
+\`\`\`{=html}
+<div class="carousel-indicators">
+${indicatorsMarkdown}
+</div>
+\`\`\`
+:::
+:::
 :::`;
 };
 
@@ -351,6 +387,26 @@ ${marqueePills}
     return `${capabilitiesGrid}\n\n${marqueeSection}`;
 }
 
+const generateFaqMarkdown = (props: FaqProps): string => {
+    const itemsMarkdown = props.items.map(item => `::: {.faq-item}
+<details>
+<summary>${item.question}</summary>
+
+${item.answer}
+</details>
+:::`).join('\n\n');
+
+    return `::: {.section}
+::: {.container-lg .faq-wrap}
+## ${props.title} {.section-title .gradient-text}
+
+::: {.faq-accordion}
+${itemsMarkdown}
+:::
+:::
+:::`;
+};
+
 
 export const generateIndexQmdContent = (components: PageComponent[]): string => {
   const frontMatter = `---
@@ -383,6 +439,8 @@ toc: false
         return generateCarouselMarkdown(comp.props);
       case ElementType.CAPABILITIES:
         return generateCapabilitiesMarkdown(comp.props);
+      case ElementType.FAQ:
+        return generateFaqMarkdown(comp.props);
       default:
         return '';
     }

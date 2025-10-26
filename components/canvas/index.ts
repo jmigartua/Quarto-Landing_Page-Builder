@@ -9,3 +9,4 @@ export * from './About';
 export * from './Separator';
 export * from './Carousel';
 export * from './Capabilities';
+export * from './Faq';

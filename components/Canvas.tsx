@@ -24,7 +24,7 @@ const renderComponent = (
   };
   
   const isDraggable = component.type !== ElementType.NAVBAR && component.type !== ElementType.FOOTER;
-  const canBeEdited = component.type !== ElementType.SEPARATOR;
+  const canBeEdited = true; // All components are now editable
 
   const commonProps = {
     key: component.id,
@@ -90,6 +90,8 @@ const renderComponent = (
         return <CanvasComponents.Carousel {...component.props} />;
       case ElementType.CAPABILITIES:
         return <CanvasComponents.Capabilities {...component.props} />;
+      case ElementType.FAQ:
+        return <CanvasComponents.Faq {...component.props} />;
       default:
         return null;
     }

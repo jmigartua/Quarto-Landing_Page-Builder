@@ -11,6 +11,7 @@ export enum ElementType {
   SEPARATOR = 'separator',
   CAROUSEL = 'carousel',
   CAPABILITIES = 'capabilities',
+  FAQ = 'faq',
 }
 
 // Navbar Props
@@ -99,14 +100,17 @@ export interface AboutProps {
 }
 
 // Separator Props
-export interface SeparatorProps {}
+export interface SeparatorProps {
+    height: number;
+    color: string;
+}
 
 // Carousel Props
 export interface CarouselImage {
     id: string;
     src: string;
-    alt: string;
-    caption?: string;
+    title: string;
+    description: string;
 }
 export interface CarouselProps {
     images: CarouselImage[];
@@ -135,6 +139,17 @@ export interface CapabilitiesProps {
   pills: PillCardItem[];
 }
 
+// FAQ Props
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+export interface FaqProps {
+  title: string;
+  items: FaqItem[];
+}
+
 
 // Discriminated Union for Page Components
 export type PageComponent =
@@ -147,7 +162,8 @@ export type PageComponent =
   | { id: string; type: ElementType.ABOUT; props: AboutProps }
   | { id: string; type: ElementType.SEPARATOR; props: SeparatorProps }
   | { id: string; type: ElementType.CAROUSEL; props: CarouselProps }
-  | { id: string; type: ElementType.CAPABILITIES; props: CapabilitiesProps };
+  | { id: string; type: ElementType.CAPABILITIES; props: CapabilitiesProps }
+  | { id: string; type: ElementType.FAQ; props: FaqProps };
 
 
 export interface ElementDefinition {

@@ -20,8 +20,8 @@ export const EditCarouselModal: React.FC<EditCarouselModalProps> = ({ component,
         const newImage: CarouselImage = {
             id: `carousel-img-${Date.now()}`,
             src: 'https://via.placeholder.com/800x400',
-            alt: 'New Image',
-            caption: ''
+            title: 'New Slide Title',
+            description: 'A great description for the new slide.'
         };
         setProps({ ...props, images: [...props.images, newImage] });
     };
@@ -58,20 +58,20 @@ export const EditCarouselModal: React.FC<EditCarouselModalProps> = ({ component,
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Alt Text</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Caption Title</label>
                                 <input 
                                     type="text" 
-                                    value={image.alt} 
-                                    onChange={(e) => handleImageChange(image.id, 'alt', e.target.value)}
+                                    value={image.title} 
+                                    onChange={(e) => handleImageChange(image.id, 'title', e.target.value)}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Caption (Optional)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Caption Description</label>
                                 <input 
                                     type="text" 
-                                    value={image.caption || ''}
-                                    onChange={(e) => handleImageChange(image.id, 'caption', e.target.value)}
+                                    value={image.description}
+                                    onChange={(e) => handleImageChange(image.id, 'description', e.target.value)}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                 />
                             </div>

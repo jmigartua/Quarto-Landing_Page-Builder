@@ -96,7 +96,10 @@ export const createNewComponent = (type: ElementType): PageComponent => {
             return {
                 id,
                 type: ElementType.SEPARATOR,
-                props: {}
+                props: {
+                    height: 1,
+                    color: '#e5e7eb' // border-light
+                }
             };
         case ElementType.CAROUSEL:
             return {
@@ -104,9 +107,9 @@ export const createNewComponent = (type: ElementType): PageComponent => {
                 type: ElementType.CAROUSEL,
                 props: {
                     images: [
-                        { id: `carousel-img-${Date.now()}-1`, src: 'https://via.placeholder.com/800x400/0000FF/FFFFFF?text=Slide+1', alt: 'Slide 1', caption: 'First slide description' },
-                        { id: `carousel-img-${Date.now()}-2`, src: 'https://via.placeholder.com/800x400/FF0000/FFFFFF?text=Slide+2', alt: 'Slide 2', caption: 'Second slide description' },
-                        { id: `carousel-img-${Date.now()}-3`, src: 'https://via.placeholder.com/800x400/00FF00/FFFFFF?text=Slide+3', alt: 'Slide 3', caption: 'Third slide description' },
+                        { id: `carousel-img-${Date.now()}-1`, src: 'https://via.placeholder.com/800x400/6366f1/ffffff?text=Slide+1', title: 'Articles & reports', description: 'Quarto supports scientific and technical writing, with citations & math.' },
+                        { id: `carousel-img-${Date.now()}-2`, src: 'https://via.placeholder.com/800x400/8b5cf6/ffffff?text=Slide+2', title: 'Presentations', description: 'Build slides with live code and reproducible outputs.' },
+                        { id: `carousel-img-${Date.now()}-3`, src: 'https://via.placeholder.com/800x400/10b981/ffffff?text=Slide+3', title: 'Dashboards', description: 'Publish interactive dashboards powered by Python or R.' },
                     ]
                 }
             };
@@ -132,6 +135,19 @@ export const createNewComponent = (type: ElementType): PageComponent => {
                         { id: `pill-${Date.now()}-4`, title: 'Remote nodes', description: 'Manage multiple nodes from a single dashboard.' },
                     ]
                 },
+            };
+        case ElementType.FAQ:
+            return {
+                id,
+                type: ElementType.FAQ,
+                props: {
+                    title: 'Frequently Asked Questions',
+                    items: [
+                        { id: `faq-${Date.now()}-1`, question: 'Is this free?', answer: 'Yes. The core is free to use for academic and research purposes.' },
+                        { id: `faq-${Date.now()}-2`, question: 'Do you only support GitHub?', answer: 'GitHub is first-class; other providers can be added via adapters.' },
+                        { id: `faq-${Date.now()}-3`, question: 'Who built this?', answer: 'Built by the Thermomat/UPV-EHU team and collaborators.' },
+                    ]
+                }
             };
         default:
             throw new Error(`Unknown component type: ${type}`);

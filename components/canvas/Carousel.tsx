@@ -10,10 +10,11 @@ export const Carousel: React.FC<CarouselProps> = ({ images }) => {
       <div className="relative p-4 bg-gray-200 rounded-lg">
         {firstImage ? (
           <div className="relative">
-            <img src={firstImage.src} alt={firstImage.alt} className="w-full h-auto rounded-md shadow-lg" />
-            {firstImage.caption && (
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white text-center text-sm">
-                {firstImage.caption}
+            <img src={firstImage.src} alt={firstImage.title} className="w-full h-auto rounded-md shadow-lg" style={{ maxHeight: '250px', objectFit: 'cover' }} />
+            {firstImage.title && (
+              <div className="absolute bottom-4 left-4 right-4 p-4 bg-black bg-opacity-70 text-white text-left text-sm rounded-lg">
+                <p className="font-bold">{firstImage.title}</p>
+                <p className="text-xs mt-1">{firstImage.description}</p>
               </div>
             )}
           </div>
