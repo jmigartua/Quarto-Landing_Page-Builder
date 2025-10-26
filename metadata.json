@@ -1,0 +1,5 @@
+{
+  "name": "Quarto Landing Page Builder",
+  "description": "A minimalist drag-and-drop tool to visually construct landing pages for Quarto websites and generate the corresponding markdown code in real-time.",
+  "requestFramePermissions": []
+}
