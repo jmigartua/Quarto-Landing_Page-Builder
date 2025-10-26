@@ -4,7 +4,7 @@ import {
     SeparatorProps, CarouselProps
 } from '../types';
 
-const generateNavbarYaml = (props: NavbarProps): string => {
+export const generateNavbarYaml = (props: NavbarProps): string => {
   const indent = (level: number) => '  '.repeat(level);
 
   const formatItems = (items: NavbarItem[], level: number) => {
@@ -19,37 +19,28 @@ const generateNavbarYaml = (props: NavbarProps): string => {
     }).join('\n');
   };
 
-  let yaml = `---
-title: "${props.title}"
-navbar:
-${indent(1)}left:
-${formatItems(props.leftItems, 2)}
-${indent(1)}right:
+  let yaml = `navbar:
+  logo: ./assets/pisia.png
+  right:
 ${formatItems(props.rightItems, 2)}
-`;
+  left:
+${formatItems(props.leftItems, 2)}`;
 
-  if (props.themeSwitcher) {
-      yaml += `format:
-  html:
-    theme: [cosmo, darkly]
-`;
-  }
-  
   if (props.languageSwitcher) {
       yaml += `
-# Quarto does not have a built-in language switcher.
-# This would require custom HTML/JS in a header include.
-# Example:
-# format:
-#   html:
-#     include-in-header: language-switcher.html
-`;
+  tools:
+    - icon: globe
+      menu:
+        - text: "en"
+          href: /index.qmd
+        - text: "es"
+          href: /pages/es/index.qmd
+        - text: "eu"
+          href: /pages/eu/index.qmd`;
   }
 
-  yaml += '---\n';
   return yaml;
 };
-
 
 const generateHeroMarkdown = (props: HeroProps): string => {
   if (props.imageUrl) {
@@ -157,24 +148,18 @@ const generateCtaMarkdown = (props: CtaProps): string => {
 `;
 };
 
-const generateFooterMarkdown = (props: FooterProps): string => {
-  const linksHtml = props.links.map(link => 
-    `<a href="${link.href}" class="text-reset p-2">${link.text}</a>`
-  ).join('');
+export const generateFooterYaml = (props: FooterProps): string => {
+  const indent = (level: number) => '  '.repeat(level);
+  const linksMarkdown = props.links.map(link => `[${link.text}](${link.href})`).join(' | ');
 
-  return `
-<footer class="text-center text-lg-start bg-light text-muted mt-5">
-  <div class="container p-4">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 mb-4 mb-md-0">
-        ${linksHtml}
-      </div>
-    </div>
-  </div>
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-    ${props.copyrightText}
-  </div>
-</footer>
+  return `page-footer:
+  background: light
+  left: |
+${indent(2)}${props.copyrightText}
+  center: |
+${indent(2)}
+  right: |
+${indent(2)}${linksMarkdown}
 `;
 };
 
@@ -229,35 +214,9 @@ ${itemsMarkdown}
 };
 
 
-export const generateMarkdown = (components: PageComponent[]): string => {
+export const generateIndexQmdContent = (components: PageComponent[]): string => {
   if (components.length === 0) {
     return `<!-- Drag elements from the left panel to the canvas to start building your page. -->
----
-title: "My Landing Page"
-format:
-  html:
-    toc: false
-    page-layout: full
----
-`;
-  }
-  
-  const navbarComponent = components.find(c => c.type === ElementType.NAVBAR) as Extract<PageComponent, { type: 'navbar' }> | undefined;
-  
-  const bodyComponents = components.filter(comp => comp.type !== ElementType.NAVBAR);
-
-  let yamlFrontmatter = '';
-  if (navbarComponent) {
-      yamlFrontmatter = generateNavbarYaml(navbarComponent.props);
-  } else {
-      // Default frontmatter if no navbar is present
-      yamlFrontmatter = `---
-title: "My Landing Page"
-format:
-  html:
-    toc: false
-    page-layout: full
----
 `;
   }
 
@@ -278,7 +237,7 @@ a.text-decoration-none {
 </style>
 ` : '';
   
-  const bodyContent = bodyComponents.map(comp => {
+  const bodyContent = components.map(comp => {
     switch (comp.type) {
       case ElementType.HERO:
         return generateHeroMarkdown(comp.props);
@@ -286,8 +245,6 @@ a.text-decoration-none {
         return generateFeaturesMarkdown(comp.props);
       case ElementType.CTA:
         return generateCtaMarkdown(comp.props);
-      case ElementType.FOOTER:
-        return generateFooterMarkdown(comp.props);
       case ElementType.BANNER:
         return generateBannerMarkdown(comp.props);
       case ElementType.ABOUT:
@@ -296,10 +253,14 @@ a.text-decoration-none {
         return generateSeparatorMarkdown(comp.props);
       case ElementType.CAROUSEL:
         return generateCarouselMarkdown(comp.props);
+      // Navbar and Footer are handled in _quarto.yml
+      case ElementType.NAVBAR:
+      case ElementType.FOOTER:
+        return '';
       default:
         return '';
     }
   }).join('\n\n');
   
-  return `${yamlFrontmatter}\n${hoverCss}\n${bodyContent}`;
+  return `${hoverCss}\n${bodyContent}`;
 };

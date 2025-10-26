@@ -1,21 +1,21 @@
 import React, { useState, useEffect, DragEvent } from 'react';
 import { ElementPicker } from './components/ElementPicker';
 import { Canvas } from './components/Canvas';
-import { MarkdownPreview } from './components/MarkdownPreview';
+import { CodePreview } from './components/CodePreview';
 import { PageComponent, ElementType } from './types';
-import { generateMarkdown } from './services/markdownGenerator';
+import { generateProjectFiles } from './services/projectGenerator';
 import { createNewComponent } from './services/componentFactory';
 import { EditModal } from './components/modals';
 
 const App: React.FC = () => {
   const [pageComponents, setPageComponents] = useState<PageComponent[]>([]);
-  const [markdown, setMarkdown] = useState<string>('');
+  const [projectFiles, setProjectFiles] = useState<Record<string, string>>({});
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
   const [editingComponent, setEditingComponent] = useState<PageComponent | null>(null);
 
   useEffect(() => {
-    const newMarkdown = generateMarkdown(pageComponents);
-    setMarkdown(newMarkdown);
+    const newProjectFiles = generateProjectFiles(pageComponents);
+    setProjectFiles(newProjectFiles);
   }, [pageComponents]);
 
   const addComponent = (type: ElementType) => {
@@ -93,7 +93,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-canvas-bg font-sans text-gray-800">
+    <div className="flex h-screen bg-canvas-bg font-sans text-gray-800 overflow-hidden">
       <ElementPicker />
       <main 
         className="flex-1 p-4 lg:p-6 overflow-y-auto"
@@ -109,7 +109,7 @@ const App: React.FC = () => {
           onEditComponent={setEditingComponent}
         />
       </main>
-      <MarkdownPreview markdown={markdown} />
+      <CodePreview files={projectFiles} />
       {editingComponent && (
         <EditModal 
           component={editingComponent}

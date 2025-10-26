@@ -102,7 +102,7 @@ export const EditNavbarModal: React.FC<EditNavbarModalProps> = ({ component, onS
         <Modal title="Edit Navbar" onClose={onClose} onSave={handleSave}>
             <div className="space-y-6">
                 <div>
-                    <InputField label="Site Title" name="title" value={props.title} onChange={handleInputChange} />
+                    <InputField label="Website Title" name="title" value={props.title} onChange={handleInputChange} />
                 </div>
                 <div>
                     <h4 className="font-semibold text-gray-800 mb-2">Left Items</h4>
@@ -116,7 +116,7 @@ export const EditNavbarModal: React.FC<EditNavbarModalProps> = ({ component, onS
                     <h4 className="font-semibold text-gray-800 mb-2">Options</h4>
                     <div className="flex gap-4">
                         <CheckboxField label="Enable Theme Switcher (Light/Dark)" name="themeSwitcher" checked={props.themeSwitcher} onChange={handleInputChange} />
-                        <CheckboxField label="Enable Language Switcher (Placeholder)" name="languageSwitcher" checked={props.languageSwitcher} onChange={handleInputChange} />
+                        <CheckboxField label="Enable Language Switcher (in Tools menu)" name="languageSwitcher" checked={props.languageSwitcher} onChange={handleInputChange} />
                     </div>
                 </div>
             </div>
