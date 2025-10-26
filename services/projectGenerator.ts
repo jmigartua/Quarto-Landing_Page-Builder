@@ -17,15 +17,15 @@ export const generateProjectFiles = (components: PageComponent[]): Record<string
     if (navbarComp) {
         // Replace website title
         quartoYaml = quartoYaml.replace(
-            /title: ".*"/, 
-            `title: "${navbarComp.props.title}"`
+            `##WEBSITE_TITLE_PLACEHOLDER##`, 
+            `"${navbarComp.props.title}"`
         );
         
+        // Replace navbar block
         const navbarYaml = generateNavbarYaml(navbarComp.props);
-        // This regex is designed to be robust against different amounts of whitespace
         quartoYaml = quartoYaml.replace(
-            /navbar:[\s\S]*?page-navigation:/, 
-            `${navbarYaml}\n  page-navigation:`
+            `##NAVBAR_BLOCK_PLACEHOLDER##`, 
+            navbarYaml
         );
 
         // Handle theme switcher
@@ -33,16 +33,18 @@ export const generateProjectFiles = (components: PageComponent[]): Record<string
             ? 'theme: \n      light: ./styles/custom.scss\n      dark: ./styles/custom-ocean.scss' 
             : 'theme: ./styles/custom.scss';
         quartoYaml = quartoYaml.replace(
-            /theme:[\s\S]*?css:/,
-            `${themeYaml}\n    css:`
+            `##THEME_BLOCK_PLACEHOLDER##`,
+            themeYaml
         );
 
     } else {
-         // If no navbar, ensure theme switcher is off
+         // If no navbar, use default title, remove navbar block, and set default theme
+        quartoYaml = quartoYaml.replace(`##WEBSITE_TITLE_PLACEHOLDER##`, `"My Awesome Landing Page"`);
+        quartoYaml = quartoYaml.replace(`##NAVBAR_BLOCK_PLACEHOLDER##`, ``);
         const themeYaml = 'theme: ./styles/custom.scss';
         quartoYaml = quartoYaml.replace(
-            /theme:[\s\S]*?css:/,
-            `${themeYaml}\n    css:`
+            `##THEME_BLOCK_PLACEHOLDER##`,
+            themeYaml
         );
     }
 
@@ -50,9 +52,12 @@ export const generateProjectFiles = (components: PageComponent[]): Record<string
     if (footerComp) {
         const footerYaml = generateFooterYaml(footerComp.props);
         quartoYaml = quartoYaml.replace(
-            /page-footer:[\s\S]*?format:/,
-            `${footerYaml}\n\nformat:`
+            `##FOOTER_BLOCK_PLACEHOLDER##`,
+            footerYaml
         );
+    } else {
+        // If no footer, remove the placeholder
+        quartoYaml = quartoYaml.replace(`##FOOTER_BLOCK_PLACEHOLDER##`, '');
     }
     
     const bodyComponents = components.filter(c => c.type !== 'navbar' && c.type !== 'footer');

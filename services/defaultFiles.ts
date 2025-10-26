@@ -3,43 +3,18 @@ export const DEFAULT_QUARTO_YAML = `project:
   output-dir: _site
 
 website:
-  title: "My Awesome Landing Page"
+  title: ##WEBSITE_TITLE_PLACEHOLDER##
   description: ""
   site-url: ""
   repo-url: ""
-  navbar:
-    logo: ./assets/pisia.png
-    right:
-      - text: ""
-        href: /index.qmd
-    left:
-      - text: ""
-        href: /index.qmd
-    tools:
-      - icon: globe
-        menu:
-          - text: "en"
-            href: /index.qmd
-          - text: "es"
-            href: /pages/es/index.qmd
-          - text: "eu"
-            href: /pages/eu/index.qmd
+##NAVBAR_BLOCK_PLACEHOLDER##
   page-navigation: true
   search: true
   back-to-top-navigation: true
-  page-footer:
-    background: light
-    left: |
-
-    center: |
-
-    right: |
-
+##FOOTER_BLOCK_PLACEHOLDER##
 format:
   html:
-    theme: 
-      light: ./styles/custom.scss
-      dark: ./styles/custom-ocean.scss
+    ##THEME_BLOCK_PLACEHOLDER##
     css:
       - styles/custom.scss
       - styles/custom-ocean.scss
